@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ELIMU Control — Pilote licences</title>
+  <link rel="icon" href="./assets/elimu-logo.png">
+  <link rel="stylesheet" href="./styles.css?v=20261015-pro">
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="mark"><img src="./assets/elimu-logo.png" alt="ELIMU"><span>ELIMU<b>Control</b></span></div>
+      <nav class="rail-nav" aria-label="Navigation"><a href="#" class="on" aria-current="page"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>Licences</a></nav>
+      <div class="rail-bottom"><span class="dot" id="railDot"></span><div>Console développeur<small>Accès interne · service licences</small></div></div>
+    </aside>
+
+    <main>
+      <header class="topline">
+        <div>
+          <h1>Licences</h1>
+          <p class="intro">Suivez les établissements connectés et gérez l'autorisation de chaque PC.</p>
+        </div>
+        <div class="actions">
+          <button id="refresh" class="button secondary" type="button"><svg viewBox="0 0 24 24" class="ic"><path d="M20 11a8 8 0 10-2.3 5.7M20 4v7h-7"/></svg><span>Actualiser</span></button>
+          <button id="settings" class="button" type="button"><svg viewBox="0 0 24 24" class="ic"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 00-2-1.2L14.2 3h-4l-.4 2.7a7 7 0 00-2 1.2l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.4l-2 1.5 2 3.4 2.3-1a7 7 0 002 1.2l.4 2.7h4l.4-2.7a7 7 0 002-1.2l2.3 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></svg><span>Configuration</span></button>
+        </div>
+      </header>
+
+      <section class="metrics" aria-label="Résumé">
+        <article><span>Installations</span><strong id="total">—</strong><small>enregistrées dans le pilote</small></article>
+        <article class="ok"><span>Actives</span><strong id="active">—</strong><small>licences valides</small></article>
+        <article class="warn"><span>À valider</span><strong id="pending">—</strong><small>nouvelles machines en attente</small></article>
+        <article class="alert"><span>À renouveler</span><strong id="renew">—</strong><small>expiration sous 7 jours</small></article>
+      </section>
+
+      <section class="panel table-panel">
+        <div class="panel-heading">
+          <div><h2>Installations enregistrées</h2><p class="sub" id="count"></p></div>
+          <span id="state" class="state">Connexion non configurée</span>
+        </div>
+        <div class="filters">
+          <label class="search"><span class="sr">Rechercher</span><svg viewBox="0 0 24 24" class="ic"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="search" type="search" placeholder="École, identifiant ou PC"></label>
+          <label class="sel"><span>Statut</span><select id="status"><option value="">Tous</option><option value="EN_ATTENTE">En attente</option><option value="ACTIF">Actif</option><option value="DESACTIVE">Désactivé</option></select></label>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Établissement</th><th>Empreinte PC</th><th>Dernier contact</th><th>Expiration</th><th>État</th><th><span class="sr">Actions</span></th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+          <div id="empty" class="empty" hidden><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg><b>Aucune installation à afficher</b><p>Configurez l'URL du pilote puis actualisez, ou modifiez vos filtres.</p></div>
+        </div>
+      </section>
+      <div id="message" class="sr" role="status" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <div id="toasts" class="toasts" aria-hidden="true"></div>
+
+  <dialog id="configDialog">
+    <form method="dialog" id="configForm">
+      <div class="dialog-head"><div><h2>Connexion au pilote</h2><p>Accès développeur</p></div><button value="cancel" class="close" aria-label="Fermer">×</button></div>
+      <label>URL Apps Script pilote<input id="apiUrl" required placeholder="https://script.google.com/macros/s/.../exec"></label>
+      <label>Clé API interne <span class="muted">facultatif</span><input id="apiKey" type="password" placeholder="PILOT_API_KEY" autocomplete="off"></label>
+      <p class="dialog-help">Cette configuration reste dans ce navigateur. Elle ne concerne aucun des trois portails de l'établissement client.</p>
+      <div class="dialog-foot"><button value="cancel" class="button secondary" formnovalidate>Annuler</button><button class="button" value="default">Enregistrer et tester</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="editDialog">
+    <form method="dialog" id="editForm">
+      <div class="dialog-head"><div><h2>Gérer l'accès</h2><p>Autorisation du PC</p></div><button value="cancel" class="close" aria-label="Fermer">×</button></div>
+      <input id="editSchool" type="hidden"><input id="editPc" type="hidden">
+      <p id="editIdentity" class="identity"></p>
+
+      <label>Accès
+        <select id="editStatus"><option value="EN_ATTENTE">En attente</option><option value="ACTIF">Actif</option><option value="DESACTIVE">Désactivé</option></select>
+      </label>
+      <label>Date d'expiration<input id="editDate" type="date"></label>
+      <div class="chips" id="dateChips" aria-label="Raccourcis de durée">
+        <button type="button" data-days="30">+30 jours</button><button type="button" data-days="90">+90 jours</button><button type="button" data-days="365">+1 an</button>
+      </div>
+
+      <p class="hint" id="editHint">En attente : installation restaurée ou nouvellement détectée. Passez à Actif uniquement après vérification de l'établissement et de l'empreinte PC.</p>
+      <label class="check" id="verifyRow" hidden><input type="checkbox" id="verify"><span>J'ai vérifié l'établissement et l'empreinte PC.</span></label>
+
+      <div class="diff" id="diff" aria-live="polite"></div>
+      <div class="feedback" id="feedback" role="status" aria-live="polite" hidden></div>
+
+      <div class="dialog-foot">
+        <button value="cancel" class="button secondary" id="cancel-edit" formnovalidate>Annuler</button>
+        <button id="save-edit" class="button save" value="default" disabled><span class="spin" aria-hidden="true"></span><svg viewBox="0 0 24 24" class="tick"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="lbl">Enregistrer l'accès</span></button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="./config.js"></script><script src="./app.js"></script><script src="./ui.js"></script>
+</body>
+</html>
