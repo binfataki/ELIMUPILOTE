@@ -1,6 +1,6 @@
 window.PILOT_CONFIG = {
-  apiUrl: "https://script.google.com/macros/s/AKfycby2fzCP6nwhIXI2WPBlquJ-kx5jmGQK7k__MhfWP4LaTK1Al9uwuF4z4REhJAmrlZ8x/exec",
-  configVersion: "2026-10-19-1",
+  apiUrl: "https://script.google.com/macros/s/AKfycbzv9gHEUjIjc75PFEUdt9Z03nVV7Tbugwr5Zvkqio3n0-abPClbayk7xre8D-e5Fi1W/exec",
+  configVersion: "2026-10-19-2",
   appName: "ELIMU Control",
   appSubtitle: "Pilotage des licences et installations"
 };
