@@ -16,6 +16,8 @@ L'URL Apps Script par défaut se trouve dans `config.js`. La clé API interne ne
 
 Le portail pilote sert à gérer les installations et les licences. Il ne contient pas les données locales des établissements ni le logiciel ELIMU.
 
+Le registre est relu à l'ouverture, avec le bouton **Actualiser** et automatiquement toutes les 30 secondes lorsque la page est visible et en ligne. Une notification visuelle est affichée lorsqu'une installation passe ou reste dans l'état `EN_ATTENTE` ou `DESACTIVE`; elle est dédupliquée tant que la situation ne change pas.
+
 ## Tester avant publication
 
 Depuis la racine du projet :
