@@ -3,9 +3,9 @@
 (() => {
   const $ = (id) => document.getElementById(id);
   const dlg = $('editDialog'), form = $('editForm'), btn = $('save-edit'), lbl = btn.querySelector('.lbl');
-  const fb = $('feedback'), diff = $('diff'), status = $('editStatus'), date = $('editDate');
-  const verifyRow = $('verifyRow'), verify = $('verify'), toasts = $('toasts');
-  const LABELS = { EN_ATTENTE: 'En attente', ACTIF: 'Actif', DESACTIVE: 'Désactivé' };
+  const fb = $('feedback'), diff = $('diff'), code = $('editCode'), date = $('editDate');
+  const toasts = $('toasts');
+  const LABELS = {};
   const TIMEOUT = 20000;
   let initial = null, saving = false, timer = null, allowClose = false;
 
@@ -19,25 +19,22 @@
 
   /* ---------- Formulaire : changements détectés ---------- */
   const fmt = (d) => (d ? new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }) : 'aucune');
-  const current = () => ({ status: status.value, date: date.value });
+  const current = () => ({ code: code.value.trim(), date: date.value });
   const changes = () => {
     if (!initial) return [];
     const c = current(), out = [];
-    if (c.status !== initial.status) out.push(['Accès', LABELS[initial.status] || initial.status, LABELS[c.status]]);
+    if (/^\d{6}$/.test(c.code)) out.push(['Code de licence', 'non configuré ou masqué', 'nouveau code saisi']);
     if (c.date !== initial.date) out.push(['Expiration', fmt(initial.date), fmt(c.date)]);
     return out;
   };
-  function needsVerify() { return initial && initial.status !== 'ACTIF' && status.value === 'ACTIF'; }
 
   function refresh() {
     if (saving) return;
     const list = changes();
     diff.innerHTML = list.map(([k, a, b]) => `<div><em>${k}</em><s>${a}</s><span>→</span><b>${b}</b></div>`).join('');
-    verifyRow.hidden = !needsVerify();
-    if (verifyRow.hidden) verify.checked = false;
-    const ok = list.length > 0 && (!needsVerify() || verify.checked);
+    const ok = /^\d{6}$/.test(code.value.trim());
     btn.disabled = !ok;
-    btn.title = !list.length ? 'Aucune modification à enregistrer' : (!ok ? "Confirmez la vérification avant d'activer" : '');
+    btn.title = !ok ? 'Saisissez exactement 6 chiffres' : '';
     setBtn('idle');
   }
 
@@ -104,8 +101,7 @@
     }, 0);
   }).observe(dlg, { attributes: true, attributeFilter: ['open'] });
 
-  [status, date].forEach((el) => el.addEventListener('input', refresh));
-  verify.addEventListener('change', refresh);
+  [code, date].forEach((el) => el.addEventListener('input', refresh));
   $('dateChips').addEventListener('click', (e) => {
     const d = +e.target.dataset?.days; if (!d) return;
     const base = date.value && new Date(date.value) > new Date() ? new Date(date.value) : new Date();
