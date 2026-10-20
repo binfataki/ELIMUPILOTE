@@ -1,0 +1,16 @@
+{
+  "name": "ELIMU Control — Pilote licences",
+  "short_name": "ELIMU Control",
+  "description": "Console de gestion des licences ELIMU.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0e1d38",
+  "theme_color": "#14284b",
+  "icons": [
+    { "src": "./assets/elimu-logo.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "./assets/elimu-logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

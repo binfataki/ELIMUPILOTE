@@ -18,6 +18,10 @@ Le portail pilote sert à gérer les installations et les licences. Il ne contie
 
 Le registre est relu à l'ouverture, avec le bouton **Actualiser** et automatiquement toutes les 30 secondes lorsque la page est visible et en ligne. Une notification visuelle est affichée lorsqu'une installation passe ou reste dans l'état `EN_ATTENTE` ou `DESACTIVE`; elle est dédupliquée tant que la situation ne change pas.
 
+## Installation sur téléphone
+
+Le portail est une PWA mobile-first. Depuis Chrome ou Edge sur Android, ouvrir l'adresse Pages puis appuyer sur **Installer** ou choisir **Installer l'application** dans le menu du navigateur. Sur iPhone/iPad, ouvrir le menu **Partager**, puis **Sur l'écran d'accueil**. Après installation, ELIMU Control s'ouvre comme une application autonome et son interface s'adapte à l'écran du téléphone. Les appels Apps Script restent en ligne : le mode hors connexion conserve seulement l'interface du portail, sans inventer de données de licences.
+
 ## Tester avant publication
 
 Depuis la racine du projet :
