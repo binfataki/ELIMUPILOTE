@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14284b">
+  <title>ELIMU — Service client</title>
+  <link rel="icon" href="./assets/elimu-logo.png">
+  <style>
+    :root{color-scheme:dark;--navy:#081426;--blue:#14284b;--gold:#d7a72c;--ink:#f5f7fb;--muted:#aebbd0}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 50% 10%,#1d4272 0,#0b1930 45%,#060e1c 100%);font-family:Inter,Segoe UI,system-ui,sans-serif;color:var(--ink)}
+    main{width:min(560px,100%);text-align:center;padding:42px 28px 36px;border:1px solid rgba(215,167,44,.5);border-top:5px solid var(--gold);border-radius:22px;background:rgba(10,24,47,.88);box-shadow:0 25px 70px rgba(0,0,0,.32)}
+    img{width:min(280px,72vw);height:auto;margin-bottom:22px}h1{margin:0 0 12px;font-size:clamp(26px,6vw,42px);letter-spacing:-.03em}p{margin:0 auto 24px;max-width:430px;color:var(--muted);font-size:17px;line-height:1.55}.phone{display:block;margin:18px 0 26px;color:#fff;font-size:clamp(25px,7vw,42px);font-weight:800;letter-spacing:.02em}.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.button{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 20px;border-radius:10px;text-decoration:none;font-weight:750}.primary{background:var(--gold);color:#101c35}.secondary{border:1px solid #6281aa;color:#fff}.muted{font-size:14px;margin-top:24px;margin-bottom:0}.error{color:#ffb4a8}
+  </style>
+</head>
+<body>
+  <main>
+    <img src="./assets/elimu-logo.png" alt="ELIMU">
+    <h1>Service client ELIMU</h1>
+    <p id="message">Pour réactiver votre logiciel, contactez le service client.</p>
+    <a id="phone" class="phone" href="#">Chargement…</a>
+    <div class="actions"><a id="whatsapp" class="button primary" href="#" target="_blank" rel="noopener">Contacter sur WhatsApp</a><a class="button secondary" href="https://binfataki.github.io/ELIMUPILOTE/">Retour à ELIMU</a></div>
+    <p class="muted">Le numéro affiché est fourni directement par le pilote ELIMU.</p>
+  </main>
+  <script src="./config.js"></script>
+  <script>
+    (async function(){
+      const params=new URLSearchParams(location.search), pilot=params.get("pilot")||((window.PILOT_CONFIG||{}).apiUrl||"");
+      const phone=document.getElementById("phone"), wa=document.getElementById("whatsapp"), msg=document.getElementById("message");
+      if(!pilot){phone.textContent="Numéro non configuré";phone.removeAttribute("href");wa.hidden=true;return;}
+      try{const r=await fetch(pilot+(pilot.includes("?")?"&":"?")+"action=contact",{cache:"no-store"});const data=await r.json();const value=String(data.support_phone||"").trim();if(!value)throw new Error("empty");const digits=value.replace(/\D/g,"");phone.textContent=value;phone.href="tel:"+value;wa.href="https://wa.me/"+digits;}
+      catch(_){phone.textContent="Numéro momentanément indisponible";phone.removeAttribute("href");wa.hidden=true;msg.classList.add("error");msg.textContent="Le service client est momentanément indisponible. Réessayez dans quelques instants.";}
+    })();
+  </script>
+</body>
+</html>

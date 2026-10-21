@@ -12,7 +12,7 @@ Ce dossier est la version statique à envoyer dans le dépôt GitHub du portail 
 
 ## Configuration
 
-L'URL Apps Script par défaut se trouve dans `config.js`. La clé API interne ne doit pas être écrite dans GitHub : elle est saisie dans **Configuration** et conservée uniquement dans le navigateur utilisé.
+L'URL Apps Script par défaut se trouve dans `config.js`. Le numéro du service client se saisit dans **Configuration** et est enregistré dans les propriétés du pilote Apps Script. Il est ensuite affiché sur `contact.html`; il n'est pas intégré au logiciel client.
 
 Le portail pilote sert à gérer les installations et les licences. Il ne contient pas les données locales des établissements ni le logiciel ELIMU.
 
